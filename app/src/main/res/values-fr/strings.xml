@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="notification_updates_title">Mises à jour disponibles : %1$d</string>
+    <string name="scan_progress_repositories">Chargement des dépôts…</string>
+    <string name="scan_progress_installed">Lecture des applications installées…</string>
+    <string name="scan_progress_play">Vérification de Google Play…</string>
+    <string name="scan_progress_mirrors">Vérification des miroirs…</string>
+    <string name="notification_updates_more">%1$s et %2$d de plus</string>
+    <string name="notification_updates_summary_more">+%1$d de plus</string>
+    <string name="notification_update_all">Tout mettre à jour</string>
+    <string name="links_browser_lost_app">Le navigateur n\'a pas indiqué quelle app ouvrir. Sur la page Play, utilisez Partager → Nova Store.</string>
+    <string name="channel_scan">Vérification des mises à jour</string>
+</resources>

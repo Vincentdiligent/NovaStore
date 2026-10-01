@@ -1,0 +1,19 @@
+NOVA STORE — быстрая сборка
+==========================
+
+Требуется: JDK 17+, Android SDK (platform 35, build-tools 35.0.0).
+
+1) Укажи путь к SDK (Android Studio сделает это сам при открытии проекта):
+   echo "sdk.dir=/path/to/android-sdk" > local.properties
+
+2) Собери APK:
+   Linux/macOS:  ./gradlew assembleDebug
+   Windows:      gradlew.bat assembleDebug
+
+3) Готово: app/build/outputs/apk/debug/app-debug.apk
+
+Тесты:    ./gradlew test
+Lint:     ./gradlew :app:lintDebug
+Подробно: README.md и docs/build.md
+
+Первый запуск Gradle скачает зависимости (~1 ГБ) — это нормально.

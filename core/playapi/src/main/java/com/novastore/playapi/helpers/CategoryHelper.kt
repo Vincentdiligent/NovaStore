@@ -1,0 +1,73 @@
+/*
+ *     GPlayApi
+ *     Copyright (C) 2020  Aurora OSS
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ */
+
+package com.novastore.playapi.helpers
+
+import com.novastore.playapi.GooglePlayApi
+import com.novastore.playapi.Item
+import com.novastore.playapi.SingletonHolder
+import com.novastore.playapi.data.models.AuthData
+import com.novastore.playapi.data.models.Category
+import com.novastore.playapi.data.models.subcategory.SubCategoryBundle
+import com.novastore.playapi.data.providers.HeaderProvider
+import com.novastore.playapi.network.HttpClient
+import java.util.*
+
+class CategoryHelper private constructor(authData: AuthData) : BaseHelper(authData) {
+
+    companion object : SingletonHolder<CategoryHelper, AuthData>(::CategoryHelper)
+
+    @Throws(Exception::class)
+    fun getAllCategoriesList(type: Category.Type): List<Category> {
+        val categoryList: MutableList<Category> = ArrayList()
+        val headers = HeaderProvider.getDefaultHeaders(authData)
+        val params: MutableMap<String, String> = HashMap()
+        params["c"] = "3"
+        params["cat"] = type.value
+
+        val playResponse = HttpClient.get(GooglePlayApi.CATEGORIES_URL, headers, params)
+        val listResponse = getListResponseFromBytes(playResponse.responseBytes)
+
+        if (listResponse!!.itemCount > 0) {
+            val item = listResponse.getItem(0)
+            if (item.subItemCount > 0) {
+                val subItem = item.getSubItem(0)
+                if (subItem.subItemCount > 0) {
+                    for (subSubItem in subItem.subItemList) {
+                        categoryList.add(getCategoryFromItem(type, subSubItem))
+                    }
+                }
+            }
+        }
+        return categoryList
+    }
+
+    @Throws(Exception::class)
+    fun getSubCategoryCluster(homeUrl: String): SubCategoryBundle? {
+        val headers = HeaderProvider.getDefaultHeaders(authData)
+        val playResponse = HttpClient.get(GooglePlayApi.URL_FDFE + "/" + homeUrl, headers)
+        return getSubCategoryCluster(playResponse.responseBytes)
+    }
+
+    private fun getCategoryFromItem(type: Category.Type, subItem: Item): Category {
+        val category = Category()
+        category.title = subItem.title
+        category.imageUrl = subItem.getImage(0).imageUrl
+        category.color = subItem.getImage(0).fillColorRGB
+        category.homeUrl = subItem.annotations.annotationLink.resolvedLink.homeUrl
+        category.type = type
+        return category
+    }
+}

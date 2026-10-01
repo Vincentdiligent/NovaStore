@@ -1,0 +1,134 @@
+/*
+ *     GPlayApi
+ *     Copyright (C) 2020  Aurora OSS
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ */
+
+package com.novastore.playapi.helpers
+
+import com.novastore.playapi.*
+import com.novastore.playapi.Constants.PATCH_FORMAT
+import com.novastore.playapi.data.models.AuthData
+import com.novastore.playapi.data.models.File
+import com.novastore.playapi.data.providers.HeaderProvider
+import com.novastore.playapi.exceptions.ApiException
+import com.novastore.playapi.network.HttpClient
+import java.io.IOException
+import java.util.*
+
+class PurchaseHelper private constructor(authData: AuthData) : BaseHelper(authData) {
+
+    companion object : SingletonHolder<PurchaseHelper, AuthData>(::PurchaseHelper)
+
+    @Throws(IOException::class)
+    fun getBuyResponse(packageName: String, versionCode: Int, offerType: Int): BuyResponse {
+        val params: MutableMap<String, String> = HashMap()
+        params["ot"] = offerType.toString()
+        params["doc"] = packageName
+        params["vc"] = versionCode.toString()
+        val playResponse = HttpClient.post(GooglePlayApi.PURCHASE_URL, HeaderProvider.getDefaultHeaders(authData), params)
+        val payload = getPayLoadFromBytes(playResponse.responseBytes)
+        return payload.buyResponse
+    }
+
+    @Throws(IOException::class)
+    fun getDeliveryResponse(packageName: String,
+                            installedVersionCode: Int = 0,
+                            updateVersionCode: Int,
+                            offerType: Int,
+                            patchFormats: Array<PATCH_FORMAT> = arrayOf(PATCH_FORMAT.GDIFF, PATCH_FORMAT.GZIPPED_GDIFF, PATCH_FORMAT.GZIPPED_BSDIFF),
+                            downloadToken: String): DeliveryResponse {
+
+        val params: MutableMap<String, String> = HashMap()
+        params["ot"] = offerType.toString()
+        params["doc"] = packageName
+        params["vc"] = updateVersionCode.toString()
+
+        /*if (installedVersionCode > 0) {
+            params["bvc"] = installedVersionCode.toString();
+            params["pf"] = patchFormats[0].value.toString();
+        }*/
+
+        if (downloadToken.isNotEmpty()) {
+            params["dtok"] = downloadToken
+        }
+
+        val playResponse = HttpClient.get(GooglePlayApi.DELIVERY_URL, HeaderProvider.getDefaultHeaders(authData), params)
+        val payload = ResponseWrapper.parseFrom(playResponse.responseBytes).payload
+        return payload.deliveryResponse
+    }
+
+    @Throws(Exception::class)
+    fun purchase(packageName: String, versionCode: Int, offerType: Int): List<File> {
+        val buyResponse = getBuyResponse(packageName, versionCode, offerType)
+        val deliveryResponse = getDeliveryResponse(packageName = packageName,
+                updateVersionCode = versionCode,
+                offerType = offerType,
+                downloadToken = buyResponse.encodedDeliveryToken)
+
+        when (deliveryResponse.status) {
+            1 ->
+                return getDownloadsFromDeliveryResponse(packageName, deliveryResponse)
+            2 ->
+                throw ApiException.AppNotSupported()
+            3 ->
+                throw ApiException.AppNotPurchased()
+            else ->
+                throw ApiException.Unknown()
+
+        }
+    }
+
+    private fun getDownloadsFromDeliveryResponse(packageName: String?, deliveryResponse: DeliveryResponse?): List<File> {
+        val fileList: MutableList<File> = ArrayList()
+        if (deliveryResponse != null) {
+            //Add base apk
+            val androidAppDeliveryData = deliveryResponse.appDeliveryData
+            if (androidAppDeliveryData != null) {
+                fileList.add(File(
+                        name = String.format("%s.apk", packageName),
+                        url = androidAppDeliveryData.downloadUrl,
+                        size = androidAppDeliveryData.downloadSize,
+                        type = File.FileType.BASE
+                ))
+
+                //Obb & patches (if any)
+                val fileMetadataList = deliveryResponse.appDeliveryData.additionalFileList
+                if (fileMetadataList != null) {
+                    for (appFileMetadata in fileMetadataList) {
+                        val isOBB = appFileMetadata.fileType == 0
+                        fileList.add(File(
+                                name = String.format("%s.%s.%s", if (isOBB) "main" else "patch", packageName, "obb"),
+                                url = appFileMetadata.downloadUrl,
+                                size = appFileMetadata.size,
+                                type = if (appFileMetadata.fileType == 0) File.FileType.OBB else File.FileType.PATCH
+                        ))
+                    }
+                }
+
+                //Add split apks (if any)
+                val splitDeliveryDataList = deliveryResponse.appDeliveryData.splitDeliveryDataList
+                if (fileMetadataList != null) {
+                    for (splitDeliveryData in splitDeliveryDataList) {
+                        fileList.add(File(
+                                name = splitDeliveryData.name,
+                                url = splitDeliveryData.downloadUrl,
+                                size = splitDeliveryData.downloadSize,
+                                type = File.FileType.SPLIT
+                        ))
+                    }
+                }
+            }
+        }
+        return fileList
+    }
+}

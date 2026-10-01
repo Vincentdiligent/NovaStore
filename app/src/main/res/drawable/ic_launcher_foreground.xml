@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Launcher artwork (basket + "N"). The 108dp adaptive layer only shows its
+  central ~72dp through the launcher mask, so the square artwork is inset by
+  12dp: the basket and the logo always stay fully visible, whatever mask
+  (circle, squircle, rounded square) the launcher uses.
+-->
+<inset xmlns:android="http://schemas.android.com/apk/res/android"
+    android:drawable="@drawable/ic_launcher_art"
+    android:inset="12dp" />

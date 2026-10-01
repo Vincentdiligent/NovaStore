@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Nova Store</string>
+
+    <string name="tab_home">Home</string>
+    <string name="tab_updates">Updates</string>
+    <string name="tab_installed">Installed</string>
+    <string name="tab_search">Search</string>
+    <string name="tab_downloads">Downloads</string>
+    <string name="tab_settings">Settings</string>
+
+    <string name="channel_updates">Updates</string>
+    <string name="channel_downloads">Downloads</string>
+    <string name="channel_installation">Installation</string>
+    <string name="channel_errors">Errors</string>
+
+    <string name="notification_updates_title">Updates available: %1$d</string>
+    <string name="scan_progress_repositories">Loading repositories…</string>
+    <string name="scan_progress_installed">Reading installed apps…</string>
+    <string name="scan_progress_play">Checking Google Play…</string>
+    <string name="scan_progress_mirrors">Checking mirrors…</string>
+    <string name="notification_updates_more">%1$s and %2$d more</string>
+    <string name="notification_updates_summary_more">+%1$d more</string>
+    <string name="notification_update_all">Update all</string>
+    <string name="links_browser_lost_app">The browser did not pass which app to open. On the Play page use Share → Nova Store.</string>
+    <string name="channel_scan">Update checks</string>
+</resources>

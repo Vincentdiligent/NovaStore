@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="notification_updates_title">Actualizaciones disponibles: %1$d</string>
+    <string name="scan_progress_repositories">Cargando repositorios…</string>
+    <string name="scan_progress_installed">Leyendo aplicaciones instaladas…</string>
+    <string name="scan_progress_play">Comprobando Google Play…</string>
+    <string name="scan_progress_mirrors">Comprobando espejos…</string>
+    <string name="notification_updates_more">%1$s y %2$d más</string>
+    <string name="notification_updates_summary_more">+%1$d más</string>
+    <string name="notification_update_all">Actualizar todo</string>
+    <string name="links_browser_lost_app">El navegador no indicó qué app abrir. En la página de Play usa Compartir → Nova Store.</string>
+    <string name="channel_scan">Comprobación de actualizaciones</string>
+</resources>

@@ -1,0 +1,29 @@
+# Build output
+build/
+*/build/
+**/build/
+.gradle/
+.kotlin/
+captures/
+.externalNativeBuild/
+.cxx/
+
+# Local machine settings (SDK path, signing passwords) — never commit
+local.properties
+keystore.properties
+*.jks
+*.keystore
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# APKs are published as GitHub Releases, not in the source tree
+releases/
+*.apk
+*.aab
+
+# OS
+.DS_Store
+Thumbs.db

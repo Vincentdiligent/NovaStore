@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="notification_updates_title">Доступны обновления: %1$d</string>
+    <string name="scan_progress_repositories">Загрузка репозиториев…</string>
+    <string name="scan_progress_installed">Чтение установленных приложений…</string>
+    <string name="scan_progress_play">Проверка Google Play…</string>
+    <string name="scan_progress_mirrors">Проверка зеркал…</string>
+    <string name="notification_updates_more">%1$s и ещё %2$d</string>
+    <string name="notification_updates_summary_more">и ещё %1$d</string>
+    <string name="notification_update_all">Обновить все</string>
+    <string name="links_browser_lost_app">Браузер не передал, какое приложение открыть. На странице Play нажмите «Поделиться» → Nova Store.</string>
+    <string name="channel_scan">Проверка обновлений</string>
+</resources>
