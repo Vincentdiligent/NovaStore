@@ -17,8 +17,8 @@ android {
         applicationId = "com.novastore.app"
         minSdk = 26
         targetSdk = 35
-        versionCode = 11
-        versionName = "7.2.0"
+        versionCode = 12
+        versionName = "7.2.1"
     }
 
     signingConfigs {
@@ -88,6 +88,7 @@ dependencies {
     // Modules
     implementation(project(":domain"))
     implementation(project(":data"))
+    implementation(project(":core:playapi"))
     implementation(project(":core:ui"))
     implementation(project(":core:common"))
     implementation(project(":core:model"))

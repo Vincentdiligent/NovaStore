@@ -37,11 +37,11 @@ class AuthHelper {
         /** Password login with an explicit device identity (e.g. the native device). */
         @Throws(Exception::class)
         fun login(email: String, password: String, properties: Properties): AuthData {
-            val deviceInfoProvider = DeviceInfoProvider(properties, Locale.getDefault().toString())
+            val deviceInfoProvider = DeviceInfoProvider(properties, com.novastore.playapi.PlayLocale.current().toString())
 
             val authData = AuthData(email, String())
             authData.deviceInfoProvider = deviceInfoProvider
-            authData.locale = Locale.getDefault()
+            authData.locale = com.novastore.playapi.PlayLocale.current()
 
             val api = GooglePlayApi(authData)
             authData.gsfId = api.generateGsfId()
@@ -67,11 +67,11 @@ class AuthHelper {
         }
 
         fun build(email: String, aasToken: String, properties: Properties): AuthData {
-            val deviceInfoProvider = DeviceInfoProvider(properties, Locale.getDefault().toString())
+            val deviceInfoProvider = DeviceInfoProvider(properties, com.novastore.playapi.PlayLocale.current().toString())
 
             val authData = AuthData(email, aasToken)
             authData.deviceInfoProvider = deviceInfoProvider
-            authData.locale = Locale.getDefault()
+            authData.locale = com.novastore.playapi.PlayLocale.current()
 
             val api = GooglePlayApi(authData)
             val gsfId = api.generateGsfId()

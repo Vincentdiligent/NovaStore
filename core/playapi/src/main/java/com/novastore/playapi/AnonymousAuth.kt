@@ -131,7 +131,7 @@ object AnonymousAuth {
             body: String,
             properties: Properties,
     ): AuthData {
-        val locale = Locale.getDefault()
+        val locale = com.novastore.playapi.PlayLocale.current()
         fun fresh(): AuthData = AuthData(email, String()).apply {
             this.authToken = authToken
             this.locale = locale

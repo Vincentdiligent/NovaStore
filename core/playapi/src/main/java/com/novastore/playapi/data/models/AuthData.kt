@@ -31,6 +31,6 @@ data class AuthData(val email: String,
     var gcmToken: String = String()
     var oAuthLoginToken: String = String()
     var dfeCookie: String = String()
-    var locale: Locale = Locale.getDefault()
+    var locale: Locale = com.novastore.playapi.PlayLocale.current()
     var deviceInfoProvider: DeviceInfoProvider? = null
 }

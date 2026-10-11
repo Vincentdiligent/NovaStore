@@ -63,7 +63,7 @@ object DeviceAccountAuth {
     fun login(context: Context, email: String, properties: java.util.Properties): AuthData {
         val deviceInfoProvider = com.novastore.playapi.data.providers.DeviceInfoProvider(
             properties,
-            Locale.getDefault().toString(),
+            com.novastore.playapi.PlayLocale.current().toString(),
         )
         val accountManager = AccountManager.get(context)
         val account = accountManager.getAccountsByType(ACCOUNT_TYPE)
@@ -74,7 +74,7 @@ object DeviceAccountAuth {
 
         val authData = AuthData(email, String())
         authData.deviceInfoProvider = deviceInfoProvider
-        authData.locale = Locale.getDefault()
+        authData.locale = com.novastore.playapi.PlayLocale.current()
 
         val api = GooglePlayApi(authData)
         authData.gsfId = api.generateGsfId()

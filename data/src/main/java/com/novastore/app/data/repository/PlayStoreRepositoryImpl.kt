@@ -511,7 +511,7 @@ class PlayStoreRepositoryImpl @Inject constructor(
             if (System.currentTimeMillis() - mintedAt >= ANONYMOUS_SESSION_MAX_AGE_MS) return null
             if (profile != settingsDataStore.playDeviceProfileSnapshot()) return null
             val properties = if (json.optBoolean("fallback")) deviceProperties.fallback() else deviceProperties.resolve(profile)
-            val locale = java.util.Locale.getDefault()
+            val locale = com.novastore.playapi.PlayLocale.current()
             AuthData(json.getString("email"), "").apply {
                 authToken = json.getString("authToken")
                 gsfId = json.getString("gsfId")

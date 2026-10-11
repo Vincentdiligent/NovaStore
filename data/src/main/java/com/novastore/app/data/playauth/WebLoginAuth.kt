@@ -26,8 +26,8 @@ object WebLoginAuth {
     @Throws(Exception::class)
     fun login(email: String, oauthToken: String, properties: Properties): AuthData {
         val authData = AuthData(email, String()).apply {
-            deviceInfoProvider = DeviceInfoProvider(properties, Locale.getDefault().toString())
-            locale = Locale.getDefault()
+            deviceInfoProvider = DeviceInfoProvider(properties, com.novastore.playapi.PlayLocale.current().toString())
+            locale = com.novastore.playapi.PlayLocale.current()
         }
         val api = GooglePlayApi(authData)
         authData.gsfId = api.generateGsfId()

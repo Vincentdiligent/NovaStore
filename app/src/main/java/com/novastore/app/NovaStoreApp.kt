@@ -89,6 +89,11 @@ class NovaStoreApp : Application(), Configuration.Provider, ImageLoaderFactory {
 
     override fun onCreate() {
         super.onCreate()
+        // Play picks language splits by this locale: always the phone's
+        // language, never Nova's own in-app language.
+        com.novastore.playapi.PlayLocale.provider = {
+            android.content.res.Resources.getSystem().configuration.locales[0]
+        }
         createNotificationChannels()
         // Visible progress for repository loading / update scans.
         scanProgressNotifier.start(appScope)
